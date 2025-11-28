@@ -74,7 +74,7 @@ export async function getEarningsByUser(
     LIMIT ? OFFSET ?
   `).bind(userId, limit, offset).all();
 
-  return (results.results || []) as Earnings[];
+  return (results.results || []) as unknown as Earnings[];
 }
 
 export async function getEarningsSummary(

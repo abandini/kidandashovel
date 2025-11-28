@@ -18,6 +18,8 @@ export interface User {
   lng?: number;
   email_verified: boolean;
   email_verification_token?: string;
+  password_reset_token?: string;
+  password_reset_expires?: string;
   stripe_customer_id?: string;
   stripe_connect_id?: string;
   created_at: string;
