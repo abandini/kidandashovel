@@ -3,6 +3,12 @@ main = "src/index.ts"
 compatibility_date = "2024-06-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Custom domain routes
+routes = [
+  { pattern = "akidandashovel.com/*", zone_name = "akidandashovel.com" },
+  { pattern = "www.akidandashovel.com/*", zone_name = "akidandashovel.com" }
+]
+
 # Scheduled triggers (hourly weather check)
 [triggers]
 crons = ["0 * * * *"]
