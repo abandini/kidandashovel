@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.wrangler/
+
+# Local development
+.dev.vars
+*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+
+# Temporary files
+tmp/
+temp/
+
+# D1 local database
+.wrangler/state/

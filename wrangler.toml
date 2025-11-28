@@ -1,0 +1,66 @@
+name = "akidandashovel"
+main = "src/index.ts"
+compatibility_date = "2024-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Scheduled triggers (hourly weather check)
+[triggers]
+crons = ["0 * * * *"]
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "akidandashovel-db"
+database_id = "1f9ed716-f0a0-41be-b251-e23078c7c886"
+
+# R2 Photo Storage
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "akidandashovel-photos"
+
+# KV for Sessions
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "46016eefc82c4584b0e840f9f384a756"
+
+# KV for Cache
+[[kv_namespaces]]
+binding = "CACHE"
+id = "53d871ac00e7441788ec31f63285a119"
+
+# Workers AI binding
+[ai]
+binding = "AI"
+
+# Durable Objects for rate limiting
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "NotificationRateLimiter"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["NotificationRateLimiter"]
+
+# Environment variables (non-sensitive)
+[vars]
+ENVIRONMENT = "production"
+APP_NAME = "A Kid and a Shovel"
+APP_URL = "https://akidandashovel.com"
+
+# Staging environment
+[env.staging]
+name = "akidandashovel-staging"
+vars = { ENVIRONMENT = "staging", APP_URL = "https://staging.akidandashovel.com" }
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "akidandashovel-db-staging"
+database_id = "PLACEHOLDER_STAGING_DB_ID"
+
+[[env.staging.kv_namespaces]]
+binding = "SESSIONS"
+id = "PLACEHOLDER_STAGING_SESSIONS_KV_ID"
+
+[[env.staging.kv_namespaces]]
+binding = "CACHE"
+id = "PLACEHOLDER_STAGING_CACHE_KV_ID"

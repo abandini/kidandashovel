@@ -1,0 +1,19 @@
+# Copy this file to .dev.vars and fill in your values
+# These are secrets that should not be committed
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_xxx
+STRIPE_PUBLISHABLE_KEY=pk_test_xxx
+STRIPE_WEBHOOK_SECRET=whsec_xxx
+STRIPE_CONNECT_CLIENT_ID=ca_xxx
+
+# Push Notifications (VAPID)
+VAPID_PUBLIC_KEY=xxx
+VAPID_PRIVATE_KEY=xxx
+VAPID_SUBJECT=mailto:contact@akidandashovel.com
+
+# Session encryption
+SESSION_SECRET=your-random-32-char-secret-here
+
+# Cloudflare AI Gateway (optional)
+CLOUDFLARE_AI_GATEWAY_ID=xxx

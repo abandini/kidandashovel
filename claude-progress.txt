@@ -1,0 +1,111 @@
+# Project: A Kid and a Shovel
+
+**Started:** 2025-01-28
+**Repository:** https://github.com/abandini/kidandashovel
+**Status:** IN PROGRESS
+
+---
+
+## Overview
+
+A hyperlocal marketplace connecting Northeast Ohio seniors and homeowners with verified teenage workers for snow removal services. Think "Uber meets neighborhood kid economy" with built-in financial literacy features.
+
+### Tech Stack
+- Frontend: Server-rendered HTML with Tailwind CSS (mobile-first, senior-friendly)
+- Backend: Cloudflare Workers (TypeScript)
+- Database: Cloudflare D1 (SQLite)
+- Storage: Cloudflare R2 (photos)
+- Cache/Sessions: Cloudflare KV
+- AI: Cloudflare Workers AI (image moderation)
+- Rate Limiting: Cloudflare Durable Objects
+- Payments: Stripe Connect
+- Deployment: Wrangler CLI / GitHub Actions
+
+### Architecture Decisions
+- **Cloudflare Workers (not Pages)**: Need full control over routing, cron triggers, Durable Objects
+- **Server-rendered HTML**: Better for seniors, simpler than SPA, works offline with service worker caching
+- **D1 for database**: Relational data model (users, jobs, ratings), SQL queries, no external DB dependency
+- **R2 for photos**: Before/after job photos, profile photos - binary storage integrated with Workers
+- **KV for sessions**: Fast session lookups, TTL support for expiration
+- **Durable Objects for rate limiting**: Stateful rate limiting for notifications across worker instances
+
+---
+
+## Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `feature-list.json` | Feature tracking and status (63 features) |
+| `init.sh` | Environment setup script |
+| `wrangler.toml` | Cloudflare Workers configuration |
+| `src/index.ts` | Main entry point and router |
+| `src/db/migrations/` | D1 database migrations |
+| `src/routes/` | API and page route handlers |
+| `src/services/` | Business logic services |
+| `public/` | Static assets, PWA manifest, service worker |
+
+---
+
+## Session Log
+
+---
+
+### Session: 2025-01-28
+
+**Agent:** Claude Opus 4.5
+**Duration:** Starting session
+**Feature(s) Worked On:** infra-001 (Project scaffolding)
+
+#### Work Completed
+- Read project specification document (akidandashovel-spec.md)
+- Created feature-list.json with 63 granular testable features
+- Created claude-progress.txt (this file)
+- Creating init.sh script
+- Setting up project structure
+
+#### Technical Decisions
+- **Decision:** Using Hono framework for routing
+  - **Why:** Lightweight, built for edge/Workers, good DX
+  - **Alternatives considered:** itty-router, custom router
+- **Decision:** Server-rendered HTML with minimal JS
+  - **Why:** Senior users, progressive enhancement, offline support
+  - **Alternatives considered:** React SPA, HTMX
+
+#### Feature Status
+| Feature | Status | Notes |
+|---------|--------|-------|
+| infra-001 | IN PROGRESS | Setting up project scaffolding |
+
+#### Commits Made
+```
+(pending initial commit)
+```
+
+#### Next Session Should
+1. Complete infrastructure setup (D1, R2, KV)
+2. Run database migrations
+3. Begin authentication system (core-001 through core-006)
+
+#### Environment State
+- [ ] All tests passing
+- [ ] Dev server runs without errors
+- [ ] No uncommitted changes
+- [ ] Database migrations applied
+- [ ] Environment variables configured
+
+#### Blockers
+- None currently
+
+---
+
+## Notes
+
+**MVP Focus:** The spec has 4 phases, but we're focusing on Phase 1 (MVP) first:
+- User registration (homeowner, teen, parent consent)
+- Job posting and lifecycle
+- Before/after photo system
+- Basic rating system
+- Cash payment marking
+- NEO geographic restriction
+
+Phase 2 (Stripe payments, push notifications, weather integration) will come after MVP is complete.

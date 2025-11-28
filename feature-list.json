@@ -1,0 +1,1045 @@
+{
+  "project": "A Kid and a Shovel",
+  "description": "Hyperlocal marketplace connecting Northeast Ohio seniors with teen workers for snow removal services",
+  "repository": "https://github.com/abandini/kidandashovel",
+  "created": "2025-01-28T00:00:00Z",
+  "last_updated": "2025-01-28T00:00:00Z",
+
+  "categories": {
+    "infra": "Infrastructure setup - Cloudflare resources, project scaffolding",
+    "core": "Essential functionality - database, authentication, sessions",
+    "api": "Backend endpoints and data handling",
+    "ui": "User interface components and pages",
+    "integration": "Third-party services - Stripe, Weather, Push notifications",
+    "polish": "UX improvements, error handling, edge cases"
+  },
+
+  "priority_definitions": {
+    "1": "Must have - Required for MVP, blocks other work",
+    "2": "Should have - Important for complete product",
+    "3": "Nice to have - Enhances experience but not critical"
+  },
+
+  "features": [
+    {
+      "id": "infra-001",
+      "category": "infra",
+      "priority": 1,
+      "description": "Project scaffolding with Cloudflare Workers + TypeScript",
+      "acceptance_criteria": [
+        "wrangler.toml configured correctly",
+        "TypeScript compilation works",
+        "package.json has all required dependencies",
+        "src/index.ts entry point responds to requests",
+        "wrangler dev starts local server"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "infra-002",
+      "category": "infra",
+      "priority": 1,
+      "description": "D1 database created with initial schema migration",
+      "acceptance_criteria": [
+        "D1 database created in Cloudflare",
+        "All tables from schema created (users, teen_profiles, homeowner_profiles, jobs, ratings, etc.)",
+        "All indexes created for performance",
+        "Migration runs without errors locally",
+        "Migration runs without errors in production"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "infra-003",
+      "category": "infra",
+      "priority": 1,
+      "description": "R2 bucket created for photo storage",
+      "acceptance_criteria": [
+        "R2 bucket created in Cloudflare",
+        "Binding configured in wrangler.toml",
+        "Can upload test file from Worker",
+        "Can retrieve test file from Worker",
+        "Can delete test file from Worker"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "infra-004",
+      "category": "infra",
+      "priority": 1,
+      "description": "KV namespaces created for sessions and cache",
+      "acceptance_criteria": [
+        "SESSIONS KV namespace created",
+        "CACHE KV namespace created",
+        "Both bindings configured in wrangler.toml",
+        "Can read/write to SESSIONS from Worker",
+        "Can read/write to CACHE from Worker"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "infra-005",
+      "category": "infra",
+      "priority": 1,
+      "description": "Project routing structure implemented",
+      "acceptance_criteria": [
+        "Router handles /api/* routes",
+        "Router handles page routes (/, /login, /signup, etc.)",
+        "404 handling for unknown routes",
+        "CORS headers set correctly",
+        "Content-type headers set correctly for JSON/HTML"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-001",
+      "category": "core",
+      "priority": 1,
+      "description": "Homeowner registration creates account",
+      "acceptance_criteria": [
+        "Registration form accepts name, email, phone, address, city, zip",
+        "Password is hashed before storage",
+        "Duplicate emails rejected with clear error",
+        "Address is validated as NEO (zip code check)",
+        "Geocoding converts address to lat/lng",
+        "User record created in D1 with type='homeowner'",
+        "Homeowner profile created in homeowner_profiles table"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-002",
+      "category": "core",
+      "priority": 1,
+      "description": "Teen worker registration creates account",
+      "acceptance_criteria": [
+        "Registration form accepts name, email, age, address, parent email",
+        "Age must be 13-17 (validation)",
+        "Password is hashed before storage",
+        "User record created with type='teen'",
+        "Teen profile created with default values",
+        "Parent consent record created with unique token",
+        "Email sent to parent with consent link"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-003",
+      "category": "core",
+      "priority": 1,
+      "description": "Parent consent flow works end-to-end",
+      "acceptance_criteria": [
+        "Parent receives email with consent link",
+        "Consent page shows teen info and terms",
+        "Parent can approve or reject",
+        "Approval updates consent record",
+        "Parent account created on approval",
+        "Teen profile marked as having consent",
+        "Rejection notifies teen"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-004",
+      "category": "core",
+      "priority": 1,
+      "description": "User can log in with email/password",
+      "acceptance_criteria": [
+        "Login form accepts email and password",
+        "Invalid credentials show error message",
+        "Successful login creates session in KV",
+        "Session cookie set with secure flags",
+        "User redirected to appropriate dashboard by type"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-005",
+      "category": "core",
+      "priority": 1,
+      "description": "Session management works correctly",
+      "acceptance_criteria": [
+        "Session persists across page refresh",
+        "Session expires after inactivity (configurable)",
+        "Logout destroys session",
+        "Invalid/expired sessions redirect to login",
+        "Session contains user ID and type"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-006",
+      "category": "core",
+      "priority": 1,
+      "description": "Protected routes require authentication",
+      "acceptance_criteria": [
+        "Dashboard routes require valid session",
+        "API routes requiring auth return 401 without session",
+        "Middleware extracts user from session",
+        "User type restrictions enforced (homeowner vs teen routes)"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-007",
+      "category": "core",
+      "priority": 1,
+      "description": "Teen profile editing works",
+      "acceptance_criteria": [
+        "Teen can update bio",
+        "Teen can update profile photo (uploads to R2)",
+        "Teen can select services offered (checkboxes)",
+        "Teen can select equipment owned",
+        "Teen can set travel radius",
+        "Teen can toggle availability status",
+        "Changes persist to database"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-008",
+      "category": "core",
+      "priority": 1,
+      "description": "Homeowner profile editing works",
+      "acceptance_criteria": [
+        "Homeowner can update address",
+        "Homeowner can set property type",
+        "Homeowner can set driveway size",
+        "Homeowner can add special instructions",
+        "Changes persist to database"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "core-009",
+      "category": "core",
+      "priority": 1,
+      "description": "Teen verification badge system",
+      "acceptance_criteria": [
+        "Verified badge shows only when all checks pass",
+        "Parent consent is required for badge",
+        "School name is recorded",
+        "Profile photo passes moderation",
+        "verified_at timestamp recorded"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-001",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/auth/register - User registration endpoint",
+      "acceptance_criteria": [
+        "Accepts JSON body with user data",
+        "Validates required fields",
+        "Returns 400 for validation errors",
+        "Returns 409 for duplicate email",
+        "Returns 201 with user data on success",
+        "Does not return password hash"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-002",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/auth/login - Login endpoint",
+      "acceptance_criteria": [
+        "Accepts email and password",
+        "Returns 401 for invalid credentials",
+        "Returns 200 with session cookie on success",
+        "Returns user data (without password)",
+        "Creates session in KV"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-003",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/auth/logout - Logout endpoint",
+      "acceptance_criteria": [
+        "Destroys session in KV",
+        "Clears session cookie",
+        "Returns 200 on success",
+        "Works even if already logged out"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-004",
+      "category": "api",
+      "priority": 1,
+      "description": "GET /api/workers - List available workers",
+      "acceptance_criteria": [
+        "Returns workers with available_now=true",
+        "Supports filtering by service type",
+        "Supports filtering by proximity (lat/lng + radius)",
+        "Supports sorting by rating",
+        "Returns worker profile data",
+        "Does not return sensitive user data"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-005",
+      "category": "api",
+      "priority": 1,
+      "description": "GET /api/workers/:id - Get worker profile",
+      "acceptance_criteria": [
+        "Returns worker profile by ID",
+        "Includes services, equipment, travel radius",
+        "Includes average rating and job count",
+        "Includes recent reviews",
+        "Returns 404 for unknown ID"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-006",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/jobs - Create new job",
+      "acceptance_criteria": [
+        "Requires homeowner authentication",
+        "Validates required fields (service_type, address)",
+        "Geocodes address to lat/lng",
+        "Sets status to 'posted'",
+        "Returns job data with ID"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-007",
+      "category": "api",
+      "priority": 1,
+      "description": "GET /api/jobs - List jobs for user",
+      "acceptance_criteria": [
+        "Homeowners see their posted jobs",
+        "Teens see available jobs in their radius",
+        "Supports status filtering",
+        "Supports pagination",
+        "Returns job details with related user info"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-008",
+      "category": "api",
+      "priority": 1,
+      "description": "GET /api/jobs/:id - Get job details",
+      "acceptance_criteria": [
+        "Returns job by ID",
+        "Includes homeowner info (name, address)",
+        "Includes worker info if assigned",
+        "Includes photo URLs if present",
+        "Returns 404 for unknown ID",
+        "Returns 403 if user not authorized to view"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-009",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/jobs/:id/claim - Teen claims job",
+      "acceptance_criteria": [
+        "Requires teen authentication",
+        "Job must be in 'posted' status",
+        "Updates job status to 'claimed'",
+        "Sets worker_id and claimed_at",
+        "Returns updated job data",
+        "Returns 409 if already claimed"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-010",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/jobs/:id/confirm - Both parties confirm job",
+      "acceptance_criteria": [
+        "Job must be in 'claimed' status",
+        "Both homeowner and worker must confirm",
+        "Confirmation updates confirmed_at",
+        "When both confirm, status changes to 'confirmed'",
+        "Price is finalized"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-011",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/jobs/:id/start - Teen starts job with before photo",
+      "acceptance_criteria": [
+        "Requires teen authentication",
+        "Job must be in 'confirmed' status",
+        "Before photo URL is required",
+        "Updates status to 'in_progress'",
+        "Sets started_at timestamp"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-012",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/jobs/:id/complete - Teen completes job with after photo",
+      "acceptance_criteria": [
+        "Requires teen authentication",
+        "Job must be in 'in_progress' status",
+        "After photo URL is required",
+        "Updates status to 'completed'",
+        "Sets completed_at timestamp"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-013",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/jobs/:id/review - Submit job review",
+      "acceptance_criteria": [
+        "Job must be in 'completed' status",
+        "Homeowner can review worker (quality, reliability, etc.)",
+        "Worker can review homeowner (payment, treatment)",
+        "Rating 1-5 required, text optional",
+        "Creates rating record",
+        "Updates user average rating",
+        "When both review, status changes to 'reviewed'"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-014",
+      "category": "api",
+      "priority": 1,
+      "description": "POST /api/photos/upload - Upload photo to R2",
+      "acceptance_criteria": [
+        "Accepts multipart form data",
+        "Validates file type (jpg, png)",
+        "Validates file size (max 10MB)",
+        "Generates unique filename",
+        "Uploads to R2 bucket",
+        "Returns public URL"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "api-015",
+      "category": "api",
+      "priority": 1,
+      "description": "GET /api/ratings/:userId - Get user ratings",
+      "acceptance_criteria": [
+        "Returns ratings for specified user",
+        "Supports pagination",
+        "Includes rater name and job info",
+        "Returns average rating",
+        "Returns rating breakdown by category"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-001",
+      "category": "ui",
+      "priority": 1,
+      "description": "Landing page explains service and has CTAs",
+      "acceptance_criteria": [
+        "Clear value proposition headline",
+        "Explanation of how it works",
+        "Separate CTAs for homeowners and teens",
+        "Mobile responsive",
+        "Senior-friendly font sizes and contrast"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-002",
+      "category": "ui",
+      "priority": 1,
+      "description": "Homeowner registration page",
+      "acceptance_criteria": [
+        "Form with all required fields",
+        "Client-side validation with clear errors",
+        "NEO zip code validation",
+        "Password strength indicator",
+        "Submit shows loading state",
+        "Success redirects to dashboard"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-003",
+      "category": "ui",
+      "priority": 1,
+      "description": "Teen registration page",
+      "acceptance_criteria": [
+        "Form with all required fields",
+        "Age validation (13-17)",
+        "Parent email required field",
+        "Explanation of parent consent process",
+        "Success shows 'check parent email' message"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-004",
+      "category": "ui",
+      "priority": 1,
+      "description": "Login page",
+      "acceptance_criteria": [
+        "Email and password fields",
+        "Show/hide password toggle",
+        "Error messages for invalid login",
+        "Forgot password link",
+        "Links to registration pages"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-005",
+      "category": "ui",
+      "priority": 1,
+      "description": "Homeowner dashboard",
+      "acceptance_criteria": [
+        "Shows active jobs with status",
+        "Shows past jobs with ratings",
+        "Quick action to post new job",
+        "Notification of new claims",
+        "Mobile responsive"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-006",
+      "category": "ui",
+      "priority": 1,
+      "description": "Browse workers page for homeowners",
+      "acceptance_criteria": [
+        "List/map view toggle",
+        "Filter by service type",
+        "Filter by availability",
+        "Sort by rating/distance",
+        "Worker cards show photo, rating, services",
+        "Click card goes to profile"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-007",
+      "category": "ui",
+      "priority": 1,
+      "description": "Worker profile page (public view)",
+      "acceptance_criteria": [
+        "Shows photo, name, verified badge",
+        "Shows bio and services offered",
+        "Shows equipment owned",
+        "Shows travel radius",
+        "Shows rating with reviews",
+        "Hire button (leads to job creation)"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-008",
+      "category": "ui",
+      "priority": 1,
+      "description": "Post new job page",
+      "acceptance_criteria": [
+        "Service type selection",
+        "Address prefilled from profile (editable)",
+        "Price field (offer or 'make offer')",
+        "Timing (ASAP or schedule date/time)",
+        "Special instructions text area",
+        "Preview before submit"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-009",
+      "category": "ui",
+      "priority": 1,
+      "description": "Job detail page for homeowner",
+      "acceptance_criteria": [
+        "Shows job status clearly",
+        "Shows worker info if claimed",
+        "Shows before/after photos when available",
+        "Confirm/cancel actions based on status",
+        "Review form when completed",
+        "Payment options when completed"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-010",
+      "category": "ui",
+      "priority": 1,
+      "description": "Teen worker dashboard",
+      "acceptance_criteria": [
+        "Availability toggle prominently displayed",
+        "Active job with status",
+        "Earnings summary (this week/month/total)",
+        "Quick link to browse jobs",
+        "Notification of new jobs nearby"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-011",
+      "category": "ui",
+      "priority": 1,
+      "description": "Browse jobs page for teens",
+      "acceptance_criteria": [
+        "List/map view toggle",
+        "Filter by service type",
+        "Filter by pay range",
+        "Shows jobs within travel radius",
+        "Job cards show address, service, price",
+        "Claim button on each job"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-012",
+      "category": "ui",
+      "priority": 1,
+      "description": "Job detail page for teen worker",
+      "acceptance_criteria": [
+        "Shows job info and homeowner rating",
+        "Claim action if posted",
+        "Start job with before photo upload",
+        "Complete job with after photo upload",
+        "Review homeowner when done"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-013",
+      "category": "ui",
+      "priority": 1,
+      "description": "Teen profile edit page",
+      "acceptance_criteria": [
+        "Photo upload with preview",
+        "Bio text area",
+        "Service type checkboxes",
+        "Equipment checkboxes",
+        "Travel radius slider",
+        "Save button with feedback"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-014",
+      "category": "ui",
+      "priority": 1,
+      "description": "Parent consent page",
+      "acceptance_criteria": [
+        "Shows teen info requesting consent",
+        "Clear explanation of platform",
+        "Terms and conditions",
+        "Approve/Reject buttons",
+        "Confirmation message after action"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "ui-015",
+      "category": "ui",
+      "priority": 1,
+      "description": "Parent dashboard",
+      "acceptance_criteria": [
+        "Shows linked teen(s)",
+        "Shows teen earnings",
+        "Shows job history",
+        "Shows teen's ratings",
+        "Payment account settings"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-001",
+      "category": "integration",
+      "priority": 2,
+      "description": "Stripe Connect onboarding for teen workers",
+      "acceptance_criteria": [
+        "Teen/parent can start Stripe Connect onboarding",
+        "Onboarding flow links to parent bank account",
+        "Stripe Connect account ID stored in database",
+        "Webhook handles onboarding completion",
+        "Account status reflected in profile"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-002",
+      "category": "integration",
+      "priority": 2,
+      "description": "Stripe payment flow for homeowners",
+      "acceptance_criteria": [
+        "Homeowner can add payment method",
+        "Homeowner can pay for completed job via Stripe",
+        "Platform fee (10%) calculated correctly",
+        "Transfer to worker's Connect account works",
+        "Payment confirmation shown to both parties"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-003",
+      "category": "integration",
+      "priority": 2,
+      "description": "Stripe webhook handling",
+      "acceptance_criteria": [
+        "Webhook endpoint validates Stripe signatures",
+        "Handles payment_intent.succeeded",
+        "Handles payment_intent.failed",
+        "Handles account.updated for Connect",
+        "Updates job payment_status accordingly"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-004",
+      "category": "integration",
+      "priority": 2,
+      "description": "Weather API integration for snow forecasts",
+      "acceptance_criteria": [
+        "Fetches forecast from NWS API",
+        "Parses snow accumulation from forecast",
+        "Stores weather alerts in database",
+        "Cron trigger runs hourly",
+        "Rate limiting prevents API abuse"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-005",
+      "category": "integration",
+      "priority": 2,
+      "description": "Push notification subscription",
+      "acceptance_criteria": [
+        "VAPID keys generated and configured",
+        "Service worker registers for push",
+        "Subscription stored in database",
+        "Permission requested contextually (not on load)",
+        "Unsubscribe removes subscription"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-006",
+      "category": "integration",
+      "priority": 2,
+      "description": "Push notification sending",
+      "acceptance_criteria": [
+        "Can send push to specific user",
+        "Handles expired subscriptions",
+        "Snow alerts sent to relevant users",
+        "Job status updates trigger notifications",
+        "Notification rate limiter prevents spam"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-007",
+      "category": "integration",
+      "priority": 2,
+      "description": "Workers AI image moderation",
+      "acceptance_criteria": [
+        "Profile photos run through moderation",
+        "Before/after photos run through moderation",
+        "Inappropriate content flagged/rejected",
+        "Moderation results logged",
+        "Manual review queue for edge cases"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "integration-008",
+      "category": "integration",
+      "priority": 2,
+      "description": "Durable Object for notification rate limiting",
+      "acceptance_criteria": [
+        "Rate limiter class implemented",
+        "Binding configured in wrangler.toml",
+        "Prevents more than 1 snow alert per 12 hours",
+        "Stores last notification time per user/type",
+        "Works correctly across worker instances"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-001",
+      "category": "polish",
+      "priority": 2,
+      "description": "Geographic distance calculations",
+      "acceptance_criteria": [
+        "Haversine formula implemented correctly",
+        "Worker search filters by proximity",
+        "Job search for teens respects travel radius",
+        "Distance displayed on job/worker cards"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-002",
+      "category": "polish",
+      "priority": 2,
+      "description": "NEO zip code validation",
+      "acceptance_criteria": [
+        "List of valid NEO zip codes stored",
+        "Registration rejects non-NEO addresses",
+        "Clear error message for out-of-area",
+        "Zip code lookup for geocoding"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-003",
+      "category": "polish",
+      "priority": 2,
+      "description": "Cash payment marking flow",
+      "acceptance_criteria": [
+        "Teen can mark job as 'paid in cash'",
+        "Homeowner can confirm cash payment",
+        "Job marked complete after both confirm",
+        "Earnings recorded (no platform fee for cash)"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-004",
+      "category": "polish",
+      "priority": 2,
+      "description": "Job cancellation flow",
+      "acceptance_criteria": [
+        "Homeowner can cancel before confirmed",
+        "Worker can withdraw before confirmed",
+        "Cancellation after confirm has consequences",
+        "Cancellation reason recorded",
+        "Other party notified"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-005",
+      "category": "polish",
+      "priority": 3,
+      "description": "PWA manifest and service worker",
+      "acceptance_criteria": [
+        "manifest.json with correct app info",
+        "Icons at all required sizes",
+        "Service worker caches app shell",
+        "App installable on mobile",
+        "Offline fallback page"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-006",
+      "category": "polish",
+      "priority": 3,
+      "description": "Error handling and user feedback",
+      "acceptance_criteria": [
+        "API errors return consistent format",
+        "UI shows friendly error messages",
+        "Network errors prompt retry",
+        "Loading states on all async actions",
+        "Success feedback for completed actions"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-007",
+      "category": "polish",
+      "priority": 3,
+      "description": "Accessibility for senior users",
+      "acceptance_criteria": [
+        "Minimum 16px base font size",
+        "High contrast color scheme",
+        "Large tap targets (min 44x44px)",
+        "Clear labels on all inputs",
+        "Keyboard navigable",
+        "Screen reader compatible"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-008",
+      "category": "polish",
+      "priority": 3,
+      "description": "Earnings dashboard for teens",
+      "acceptance_criteria": [
+        "Shows this week/month/total earnings",
+        "Shows job count and average per job",
+        "Chart of earnings over time",
+        "Future fund balance displayed",
+        "Projection of future fund growth"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    },
+    {
+      "id": "polish-009",
+      "category": "polish",
+      "priority": 3,
+      "description": "Savings goals feature for teens",
+      "acceptance_criteria": [
+        "Teen can create savings goals",
+        "Goal shows progress bar",
+        "Teen can allocate earnings to goals",
+        "Notification when goal achieved",
+        "Can edit/delete goals"
+      ],
+      "passes": false,
+      "tested_at": null,
+      "notes": ""
+    }
+  ],
+
+  "stats": {
+    "total": 63,
+    "passing": 0,
+    "failing": 63,
+    "percentage": 0
+  },
+
+  "_instructions": {
+    "DO_NOT_EDIT_AFTER_START": [
+      "id",
+      "description",
+      "acceptance_criteria",
+      "category",
+      "priority"
+    ],
+    "ALLOWED_UPDATES": [
+      "passes - set to true when verified",
+      "tested_at - add ISO timestamp when tested",
+      "notes - add implementation details",
+      "last_updated - update on any change",
+      "stats - recalculate after status changes"
+    ],
+    "ADDING_FEATURES": "Only add features if genuinely missing from original scope. Document why in notes.",
+    "STATS_CALCULATION": "total = features.length, passing = count where passes=true, percentage = (passing/total)*100"
+  }
+}
