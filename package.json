@@ -1,0 +1,32 @@
+{
+  "name": "akidandashovel",
+  "version": "1.0.0",
+  "description": "Hyperlocal marketplace connecting Northeast Ohio seniors with verified teenage workers for snow removal",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate": "wrangler d1 execute akidandashovel-db --file=./migrations/0001_initial.sql",
+    "db:migrate:local": "wrangler d1 execute akidandashovel-db --local --file=./migrations/0001_initial.sql",
+    "types": "wrangler types",
+    "test": "vitest",
+    "lint": "eslint src/",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "hono": "^4.3.0",
+    "stripe": "^14.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@types/node": "^20.11.0",
+    "typescript": "^5.4.0",
+    "wrangler": "^3.60.0",
+    "vitest": "^1.3.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
