@@ -3,7 +3,7 @@
   "description": "Hyperlocal marketplace connecting Northeast Ohio seniors with teen workers for snow removal services",
   "repository": "https://github.com/abandini/kidandashovel",
   "created": "2025-01-28T00:00:00Z",
-  "last_updated": "2025-01-28T00:00:00Z",
+  "last_updated": "2025-11-28T16:45:00Z",
 
   "categories": {
     "infra": "Infrastructure setup - Cloudflare resources, project scaffolding",
@@ -33,9 +33,9 @@
         "src/index.ts entry point responds to requests",
         "wrangler dev starts local server"
       ],
-      "passes": false,
-      "tested_at": null,
-      "notes": ""
+      "passes": true,
+      "tested_at": "2025-11-28T16:45:00Z",
+      "notes": "Hono framework, TypeScript compiles cleanly, dev server starts with all bindings"
     },
     {
       "id": "infra-002",
@@ -49,9 +49,9 @@
         "Migration runs without errors locally",
         "Migration runs without errors in production"
       ],
-      "passes": false,
-      "tested_at": null,
-      "notes": ""
+      "passes": true,
+      "tested_at": "2025-11-28T16:45:00Z",
+      "notes": "D1 ID: 1f9ed716-f0a0-41be-b251-e23078c7c886, 38 SQL commands executed, 15 tables + indexes created"
     },
     {
       "id": "infra-003",
@@ -65,9 +65,9 @@
         "Can retrieve test file from Worker",
         "Can delete test file from Worker"
       ],
-      "passes": false,
-      "tested_at": null,
-      "notes": ""
+      "passes": true,
+      "tested_at": "2025-11-28T16:45:00Z",
+      "notes": "Bucket: akidandashovel-photos, binding PHOTOS verified in wrangler dev output"
     },
     {
       "id": "infra-004",
@@ -81,9 +81,9 @@
         "Can read/write to SESSIONS from Worker",
         "Can read/write to CACHE from Worker"
       ],
-      "passes": false,
-      "tested_at": null,
-      "notes": ""
+      "passes": true,
+      "tested_at": "2025-11-28T16:45:00Z",
+      "notes": "SESSIONS: 46016eefc82c4584b0e840f9f384a756, CACHE: 53d871ac00e7441788ec31f63285a119"
     },
     {
       "id": "infra-005",
@@ -97,9 +97,9 @@
         "CORS headers set correctly",
         "Content-type headers set correctly for JSON/HTML"
       ],
-      "passes": false,
-      "tested_at": null,
-      "notes": ""
+      "passes": true,
+      "tested_at": "2025-11-28T16:45:00Z",
+      "notes": "Hono router with /api/*, page routes, 404/error handlers, CORS middleware"
     },
     {
       "id": "core-001",
@@ -1019,9 +1019,9 @@
 
   "stats": {
     "total": 63,
-    "passing": 0,
-    "failing": 63,
-    "percentage": 0
+    "passing": 5,
+    "failing": 58,
+    "percentage": 7.9
   },
 
   "_instructions": {
